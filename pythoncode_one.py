@@ -7,6 +7,9 @@ from selenium.common.exceptions import WebDriverException, TimeoutException
 import subprocess
 import time
 
+subprocess.run("service tor start && tail -f /dev/null", shell=True)
+
+
 print("Script started")
 
 options =  webdriver.ChromeOptions()
