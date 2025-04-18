@@ -16,8 +16,8 @@ jobs:
 
       - name: Build the Docker image
         run: docker build -t my-app .
-
-  run-pythoncode_one1:
+        
+  run-newtest:
     needs: build
     runs-on: ubuntu-latest
     steps:
