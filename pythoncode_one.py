@@ -30,5 +30,17 @@ print(h1_element.text)
 
 
 
+h1_element = driver.find_element(By.XPATH, "/html/body/div[2]/h1")
+
+print(h1_element.text)
+
+
+driver.get("https://httpbin.org/ip")
+time.sleep(3)
+
+print("Current IP info:")
+print(driver.page_source)
+
+
 driver.quit()
 print("Script Completed")
