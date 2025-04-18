@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip3 install selenium webdriver-manager beautifulsoup4
 
 # Copy all files from the current directory to /app
-COPY . /app
+COPY pythoncode_one.py /app/pythoncode_one.py
 
 # Set working directory
 WORKDIR /app
