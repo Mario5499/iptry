@@ -6,8 +6,13 @@ from bs4 import BeautifulSoup
 from selenium.common.exceptions import WebDriverException, TimeoutException
 import subprocess
 import time
+import signal
 
-subprocess.run("service tor start && tail -f /dev/null", shell=True)
+pid = subprocess.Popen("service tor start && tail -f /dev/null", shell=True).pid
+time.sleep(10)
+os.kill(pid, signal.SIGINT)
+
+time.sleep(1)
 
 
 print("Script started")
