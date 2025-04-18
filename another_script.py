@@ -9,11 +9,11 @@ import time
 import os
 import signal
 
-pid = subprocess.Popen("service tor start && tail -f /dev/null", shell=True).pid
-time.sleep(10)
-os.kill(pid, signal.SIGINT)
+# pid = subprocess.Popen("service tor start && tail -f /dev/null", shell=True).pid
+# time.sleep(10)
+# os.kill(pid, signal.SIGINT)
 
-time.sleep(1)
+# time.sleep(1)
 
 
 print("Script started")
