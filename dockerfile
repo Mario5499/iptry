@@ -1,14 +1,20 @@
-# Use Ubuntu as the base image
+# Use a base image with necessary libraries
 FROM ubuntu:22.04
 
-# Install necessary dependencies including Tor and Chromium
+# Install dependencies and add the PPA
 RUN apt-get update && apt-get install -y \
-    tor \
-    chromium-browser \
+    software-properties-common \
+    && add-apt-repository ppa:xtradeb/apps \
+    && apt-get update \
+    && apt-get install -y \
+    ungoogled-chromium \
     chromium-chromedriver \
-    python3-pip \
     libnss3 \
     libgbm1 \
+    tor \
+    curl \
+    gnupg \
+    ca-certificates \
     libatk-bridge2.0-0 \
     libgtk-3-0 \
     libx11-xcb1 \
@@ -18,9 +24,9 @@ RUN apt-get update && apt-get install -y \
     libxss1 \
     libxtst6 \
     libxshmfence1 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install necessary Python dependencies
 RUN pip3 install selenium webdriver-manager beautifulsoup4
 
 # Copy all files from the current directory to /app
