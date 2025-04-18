@@ -17,6 +17,6 @@ os.kill(pid, signal.SIGINT)
 print("end wait")
 
 time.sleep(5)
-
+print("RUNNING ANOTHER SCRIPT")
 # Run your actual script (which should use the Tor proxy in browser options)
 subprocess.run(["python3", "another_script.py"])
