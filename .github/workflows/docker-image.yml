@@ -7,8 +7,7 @@ on:
     branches: [ "mqin" ]
 
 jobs:
-
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,10 +15,6 @@ jobs:
 
       - name: Build the Docker image
         run: docker build -t my-app .
-        
-  run-newtest:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Run pythoncode_one.py
         run: docker run --rm my-app python3 pythoncode_one.py
