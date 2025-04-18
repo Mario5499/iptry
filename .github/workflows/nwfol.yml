@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build -t my-app .
+
+  run-pythoncode_one1:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run pythoncode_one.py
+        run: docker run --rm my-app python3 pythoncode_one.py
