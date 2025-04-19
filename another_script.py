@@ -1,4 +1,4 @@
-from selenium import webdriver
+    from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -33,16 +33,28 @@ try:
     print(ip_info)
 
     # Visit check.torproject.org to verify if using Tor
-    print("\nChecking Tor status...")
+    print("\nChecking Tor status on first attempt...")
     driver.get("https://check.torproject.org/")
     
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.TAG_NAME, "h1"))
     )
     
-    tor_status = driver.find_element(By.TAG_NAME, "h1").text
-    print("Tor status:")
-    print(tor_status)
+    tor_status_first = driver.find_element(By.TAG_NAME, "h1").text
+    print("Tor status on first attempt:")
+    print(tor_status_first)
+
+    # Check again to ensure Tor is still working
+    print("\nChecking Tor status again to ensure Tor is running...")
+    driver.get("https://check.torproject.org/")
+    
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.TAG_NAME, "h1"))
+    )
+    
+    tor_status_second = driver.find_element(By.TAG_NAME, "h1").text
+    print("Tor status on second attempt:")
+    print(tor_status_second)
 
 except TimeoutException:
     print("Timeout occurred while waiting for a page element.")
