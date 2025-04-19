@@ -24,13 +24,14 @@ driver = webdriver.Chrome(options=options)
 print("Opening google.com")
 driver.get("https://check.torproject.org/")
 
+time.sleep(20)
 h1_element = driver.find_element(By.XPATH, "/html/body/div[2]/h1")
 
 print(h1_element.text)
 
 
 driver.get("https://httpbin.org/ip")
-time.sleep(3)
+time.sleep(10)
 
 print("Current IP info:")
 print(driver.page_source)
