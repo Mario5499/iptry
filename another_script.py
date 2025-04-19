@@ -21,17 +21,17 @@ options.add_argument("--proxy-server=socks5://127.0.0.1:9050")
 
 driver = webdriver.Chrome(options=options)
 
-print("Opening google.com")
-driver.get("https://check.torproject.org/")
+# print("Opening google.com")
+# driver.get("https://check.torproject.org/")
 
-time.sleep(20)
-h1_element = driver.find_element(By.XPATH, "/html/body/div[2]/h1")
+# time.sleep(20)
+# h1_element = driver.find_element(By.XPATH, "/html/body/div[2]/h1")
 
-print(h1_element.text)
+# print(h1_element.text)
 
 
 driver.get("https://httpbin.org/ip")
-time.sleep(10)
+time.sleep(20)
 
 print("Current IP info:")
 print(driver.page_source)
