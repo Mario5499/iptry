@@ -19,7 +19,8 @@ def wait_for_tor(host="127.0.0.1", port=9050, timeout=60):
             time.sleep(2)
     raise TimeoutError("❌ Timed out waiting for Tor to be ready.")
 
+# Wait for Tor to be ready before continuing
 wait_for_tor()
 
 print("✅ Tor is ready. Running another_script.py...\n")
-# subprocess.run(["python3", "another_script.py"])
+subprocess.run(["python3", "another_script.py"])
