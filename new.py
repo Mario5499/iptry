@@ -40,48 +40,54 @@ options.add_argument("--proxy-server=socks5://127.0.0.1:9050")
 # Launch browser
 driver = webdriver.Chrome(options=options)
 
-try:
-    # Visit httpbin to check IP address
-    print("Opening https://httpbin.org/ip ...")
-    driver.get("https://httpbin.org/ip")
-    
-    # Increase the timeout duration
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.TAG_NAME, "pre"))
-    )
-    
-    ip_info = driver.find_element(By.TAG_NAME, "pre").text
-    print("Current IP info:")
-    print(ip_info)
+# Retry mechanism with longer timeout
+retry_count = 3
+for attempt in range(retry_count):
+    try:
+        print(f"\nAttempt {attempt + 1}: Opening https://httpbin.org/ip ...")
+        driver.get("https://httpbin.org/ip")
+        
+        # Increase the timeout duration to 60 seconds
+        WebDriverWait(driver, 60).until(
+            EC.presence_of_element_located((By.TAG_NAME, "pre"))
+        )
+        
+        ip_info = driver.find_element(By.TAG_NAME, "pre").text
+        print("Current IP info:")
+        print(ip_info)
+        
+        # Visit check.torproject.org to verify if using Tor
+        print("\nChecking Tor status on first attempt...")
+        driver.get("https://check.torproject.org/")
+        
+        WebDriverWait(driver, 60).until(
+            EC.presence_of_element_located((By.TAG_NAME, "h1"))
+        )
+        
+        tor_status_first = driver.find_element(By.TAG_NAME, "h1").text
+        print("Tor status on first attempt:")
+        print(tor_status_first)
 
-    # Visit check.torproject.org to verify if using Tor
-    print("\nChecking Tor status on first attempt...")
-    driver.get("https://check.torproject.org/")
-    
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.TAG_NAME, "h1"))
-    )
-    
-    tor_status_first = driver.find_element(By.TAG_NAME, "h1").text
-    print("Tor status on first attempt:")
-    print(tor_status_first)
+        # Check again to ensure Tor is still working
+        print("\nChecking Tor status again to ensure Tor is running...")
+        driver.get("https://check.torproject.org/")
+        
+        WebDriverWait(driver, 60).until(
+            EC.presence_of_element_located((By.TAG_NAME, "h1"))
+        )
+        
+        tor_status_second = driver.find_element(By.TAG_NAME, "h1").text
+        print("Tor status on second attempt:")
+        print(tor_status_second)
 
-    # Check again to ensure Tor is still working
-    print("\nChecking Tor status again to ensure Tor is running...")
-    driver.get("https://check.torproject.org/")
-    
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.TAG_NAME, "h1"))
-    )
-    
-    tor_status_second = driver.find_element(By.TAG_NAME, "h1").text
-    print("Tor status on second attempt:")
-    print(tor_status_second)
+        break  # Exit loop if successful
+    except TimeoutException:
+        print(f"Timeout occurred during attempt {attempt + 1}. Retrying...")
+        time.sleep(5)  # Add a short delay before retry
+    except WebDriverException as e:
+        print(f"WebDriver error during attempt {attempt + 1}: {e}")
+        break
 
-except TimeoutException:
-    print("Timeout occurred while waiting for a page element.")
-except WebDriverException as e:
-    print(f"WebDriver error: {e}")
 finally:
     driver.quit()
     print("Script Completed")
