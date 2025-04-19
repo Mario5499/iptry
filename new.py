@@ -88,6 +88,6 @@ for attempt in range(retry_count):
         print(f"WebDriver error during attempt {attempt + 1}: {e}")
         break
 
-finally:
-    driver.quit()
-    print("Script Completed")
+# Quit the driver after completing the task
+driver.quit()
+print("Script Completed")
