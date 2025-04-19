@@ -16,8 +16,8 @@ jobs:
       - name: Build the Docker image
         run: docker build -t my-app .
 
-      - name: Run pythoncode_one.py
-        run: docker run --rm my-app python3 pythoncode_one.py
+      # - name: Run pythoncode_one.py
+      #   run: docker run --rm my-app python3 pythoncode_one.py
 
       - name: Run another_script.py
-        run: docker run --rm my-app python3 another_script.py
+        run: docker run --rm my-app bash -c "service tor start && python3 another_script.py"
