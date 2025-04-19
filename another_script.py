@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 import time
 
@@ -20,9 +21,23 @@ driver.get("https://check.torproject.org/")
 
 time.sleep(5)
 
-# Check if we're using Tor
-h1_element = driver.find_element(By.XPATH, "/html/body/div[2]/h1")
-print(h1_element.text)  # Should say "Congratulations. This browser is configured to use Tor."
+MAX_RETRIES = 10
+DELAY_BETWEEN_TRIES = 3  # seconds
+
+h1_element = None
+for attempt in range(MAX_RETRIES):
+    try:
+        print(f"🔄 Try {attempt + 1} to find the h1 element...")
+        h1_element = driver.find_element(By.TAG_NAME, "h1")
+        print("✅ Found element!")
+        print(h1_element.text)
+        break
+    except NoSuchElementException:
+        print(f"❌ h1 not found. Waiting {DELAY_BETWEEN_TRIES}s before retrying...")
+        time.sleep(DELAY_BETWEEN_TRIES)
+
+if h1_element is None:
+    print("⚠️ Gave up after multiple tries. h1 element not found.")
 
 # Get IP info from httpbin to confirm Tor IP
 driver.get("https://httpbin.org/ip")
