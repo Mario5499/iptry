@@ -39,4 +39,4 @@ WORKDIR /app
 EXPOSE 9050
 
 # Start Tor in the background
-CMD service tor start && tail -f /dev/null
+# CMD service tor start && tail -f /dev/null
