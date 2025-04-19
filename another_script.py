@@ -1,55 +1,34 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup
-from selenium.common.exceptions import WebDriverException, TimeoutException
-import subprocess
+from selenium.webdriver.chrome.options import Options
 import time
-import os
-import signal
 
-# pid = subprocess.Popen("service tor start && tail -f /dev/null", shell=True).pid
-# time.sleep(10)
-# os.kill(pid, signal.SIGINT)
-
-# time.sleep(1)
-
-
-print("Script started")
-
-options =  webdriver.ChromeOptions()
-options.binary_location = "/usr/bin/chromium-browser"  # Path to the Chromium binary
+options = Options()
+options.binary_location = "/usr/bin/chromium-browser"  # Ensure correct location
 options.add_argument("--headless")  # Run in headless mode (optional)
-options.add_argument("--no-sandbox")  # Disable sandboxing
-options.add_argument("--disable-dev-shm-usage")  # Disable /dev/shm usage
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
+# Set proxy to Tor SOCKS5
+options.add_argument('--proxy-server=socks5://127.0.0.1:9050')
 
-
+# Create the WebDriver instance
 driver = webdriver.Chrome(options=options)
 
 print("Opening google.com")
 driver.get("https://check.torproject.org/")
+
 time.sleep(5)
 
-
+# Check if we're using Tor
 h1_element = driver.find_element(By.XPATH, "/html/body/div[2]/h1")
+print(h1_element.text)  # Should say "Congratulations. This browser is configured to use Tor."
 
-print(h1_element.text)
-
-
-
-h1_element = driver.find_element(By.XPATH, "/html/body/div[2]/h1")
-
-print(h1_element.text)
-
-
+# Get IP info from httpbin to confirm Tor IP
 driver.get("https://httpbin.org/ip")
 time.sleep(3)
 
 print("Current IP info:")
 print(driver.page_source)
 
-
 driver.quit()
-print("Script Completed")
