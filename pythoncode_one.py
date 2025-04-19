@@ -1,22 +1,25 @@
 import subprocess
 import time
-import os
-import signal
+import socket
 
-# Start tor (no shell=True)
-subprocess.Popen(["service", "tor", "start"])
+# Start Tor
+print("Starting Tor service...")
+subprocess.run(["service", "tor", "start"])
 
-# Start dummy process to keep container alive
-pid = subprocess.Popen(["tail", "-f", "/dev/null"]).pid
+# Wait until Tor's SOCKS5 proxy is actually ready
+def wait_for_tor(host="127.0.0.1", port=9050, timeout=60):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            with socket.create_connection((host, port), timeout=5):
+                print("✅ Tor SOCKS5 proxy is ready.")
+                return True
+        except:
+            print("⏳ Waiting for Tor...")
+            time.sleep(2)
+    raise TimeoutError("❌ Timed out waiting for Tor to be ready.")
 
-print("wait for 20 seconds")
-time.sleep(20)
+wait_for_tor()
 
-# Stop the dummy process (not tor)
-os.kill(pid, signal.SIGINT)
-print("end wait")
-
-time.sleep(5)
-print("RUNNING ANOTHER SCRIPT")
-# Run your actual script (which should use the Tor proxy in browser options)
-# subprocess.run(["python3", "another_script.py"])
+print("✅ Tor is ready. Running another_script.py...\n")
+subprocess.run(["python3", "another_script.py"])
