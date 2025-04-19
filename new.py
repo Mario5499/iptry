@@ -24,6 +24,10 @@ while time.time() - start_time < 60:
 else:
     raise TimeoutError("❌ Timed out waiting for Tor to be ready.")
 
+# Add a short delay to ensure Tor connection is fully established
+print("Waiting for Tor to fully establish connection...")
+time.sleep(5)  # Adding a 5-second delay
+
 # Set up Chrome options for headless + Tor SOCKS5 proxy
 options = webdriver.ChromeOptions()
 options.binary_location = "/usr/bin/chromium-browser"
@@ -41,7 +45,8 @@ try:
     print("Opening https://httpbin.org/ip ...")
     driver.get("https://httpbin.org/ip")
     
-    WebDriverWait(driver, 10).until(
+    # Increase the timeout duration
+    WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.TAG_NAME, "pre"))
     )
     
@@ -53,7 +58,7 @@ try:
     print("\nChecking Tor status on first attempt...")
     driver.get("https://check.torproject.org/")
     
-    WebDriverWait(driver, 10).until(
+    WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.TAG_NAME, "h1"))
     )
     
@@ -65,7 +70,7 @@ try:
     print("\nChecking Tor status again to ensure Tor is running...")
     driver.get("https://check.torproject.org/")
     
-    WebDriverWait(driver, 10).until(
+    WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.TAG_NAME, "h1"))
     )
     
